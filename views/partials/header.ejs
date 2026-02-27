@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="uk">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title><%= title ? (title + " — " + storeName) : storeName %></title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+<div class="topbar">
+  <div class="container">
+    <div class="nav">
+      <a class="brand" href="/">
+        <div class="brand-badge" aria-hidden="true"></div>
+        <span><%= storeName %></span>
+      </a>
+      <div class="nav-links">
+        <a href="/catalog">Каталог</a>
+        <a class="cart-pill" href="/cart">Корзина (<%= cartCount %>)</a>
+        <% if (authed) { %>
+          <a href="/admin/dashboard">Админ</a>
+          <form action="/admin/logout" method="post" style="display:inline">
+            <button class="btn btn-ghost" style="padding:8px 10px; border-radius:12px;" type="submit">Выйти</button>
+          </form>
+        <% } %>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="container">

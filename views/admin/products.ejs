@@ -1,0 +1,104 @@
+<%- include("../partials/header", { title: "Админ • Products" }) %>
+
+<div class="card" style="margin:18px 0;">
+  <div class="admin-nav">
+    <a href="/admin/dashboard">Dashboard</a>
+    <a href="/admin/products">Products</a>
+    <a href="/admin/orders">Orders</a>
+    <a href="/catalog">Открыть магазин</a>
+  </div>
+
+  <h2 style="margin:0 0 10px;">Products</h2>
+
+  <div class="card" style="padding:14px; margin-bottom:14px;">
+    <h3 style="margin:0 0 8px;">Импорт CSV (100+ товаров за минуту)</h3>
+    <form method="post" action="/admin/import" enctype="multipart/form-data">
+      <input type="file" name="file" accept=".csv" required>
+      <button class="btn btn-primary" type="submit" style="margin-top:10px;">Импортировать</button>
+    </form>
+    <div class="small" style="margin-top:10px;">
+      Формат: name,sku,price_uah,stock,brand,category,description,images<br>
+      images: ссылки через | (pipe)
+    </div>
+  </div>
+
+  <div class="card" style="padding:14px; margin-bottom:14px;">
+    <h3 style="margin:0 0 8px;">Добавить / Редактировать</h3>
+    <form method="post" action="/admin/products/save">
+      <input type="hidden" name="id" value="">
+      <div class="form-row">
+        <div>
+          <label>Название</label>
+          <input name="name" placeholder="Воблер ...">
+        </div>
+        <div>
+          <label>SKU</label>
+          <input name="sku" placeholder="ABC-123">
+        </div>
+      </div>
+      <div class="form-row">
+        <div>
+          <label>Цена (UAH)</label>
+          <input name="price_uah" inputmode="numeric" placeholder="499">
+        </div>
+        <div>
+          <label>Остаток</label>
+          <input name="stock" inputmode="numeric" placeholder="10">
+        </div>
+      </div>
+      <div class="form-row">
+        <div>
+          <label>Бренд</label>
+          <input name="brand" placeholder="Rapala">
+        </div>
+        <div>
+          <label>Категория</label>
+          <select name="category_id">
+            <option value="null">—</option>
+            <% categories.forEach(c => { %>
+              <option value="<%= c.id %>"><%= c.name %></option>
+            <% }) %>
+          </select>
+        </div>
+      </div>
+
+      <label>Описание</label>
+      <textarea name="description" placeholder="Коротко: для щуки, глубина, проводка..."></textarea>
+
+      <label>Изображения (каждая ссылка с новой строки)</label>
+      <textarea name="images" placeholder="https://.../1.jpg&#10;https://.../2.jpg"></textarea>
+
+      <label style="display:flex; align-items:center; gap:8px;">
+        <input type="checkbox" name="is_active" value="1" checked> Активен (показывать в магазине)
+      </label>
+
+      <button class="btn btn-primary" type="submit" style="margin-top:10px;">Сохранить</button>
+      <div class="small" style="margin-top:10px;">Для редактирования существующего товара используй CSV импорт (по SKU) или попроси — добавлю кнопку “edit”.</div>
+    </form>
+  </div>
+
+  <h3 style="margin:0 0 10px;">Список товаров (последние 200)</h3>
+  <table class="table">
+    <thead><tr><th>ID</th><th>Название</th><th>Категория</th><th>Цена</th><th>Остаток</th><th>Активен</th><th></th></tr></thead>
+    <tbody>
+      <% products.forEach(p => { %>
+        <tr>
+          <td><%= p.id %></td>
+          <td><a href="/p/<%= p.slug %>"><%= p.name %></a><div class="small">SKU: <%= p.sku || "—" %> • <%= p.brand || "—" %></div></td>
+          <td><%= p.category_name || "—" %></td>
+          <td><%= money(p.price_uah) %></td>
+          <td><%= p.stock %></td>
+          <td><%= p.is_active ? "да" : "нет" %></td>
+          <td style="width:110px;">
+            <form method="post" action="/admin/products/delete" onsubmit="return confirm('Удалить товар?')">
+              <input type="hidden" name="id" value="<%= p.id %>">
+              <button class="btn btn-ghost" type="submit" style="padding:10px 12px;">Удалить</button>
+            </form>
+          </td>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
+</div>
+
+<%- include("../partials/footer") %>

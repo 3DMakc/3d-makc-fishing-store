@@ -1,0 +1,68 @@
+<%- include("../partials/header", { title: null }) %>
+
+<section class="hero">
+  <div class="hero-grid">
+    <div class="card">
+      <div class="badge">⚡ PROVEN TACKLE • UKRAINE</div>
+      <h1>Снасти для реальных хищников</h1>
+      <p>Премиум-ассортимент. Быстрая доставка по Украине. Оплата при получении. Рекомендации от 3D_MAKC.</p>
+      <div class="btn-row">
+        <a class="btn btn-primary" href="/catalog">Перейти в каталог</a>
+        <a class="btn btn-ghost" href="/catalog?inStock=1">Только в наличии</a>
+      </div>
+      <div class="line"></div>
+      <div class="kv">
+        <div class="pill">📦 Нова Пошта 1–3 дня</div>
+        <div class="pill">💳 Наложка / Онлайн</div>
+        <div class="pill">🛡 Проверено на воде</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3 style="margin:0 0 10px;">Категории</h3>
+      <div class="kv">
+        <% categories.forEach(c => { %>
+          <a class="pill" href="/c/<%= c.slug %>">🎣 <%= c.name %></a>
+        <% }) %>
+        <% if (!categories.length) { %>
+          <div class="pill">Добавь категории через импорт CSV или админку</div>
+        <% } %>
+      </div>
+      <div class="line"></div>
+      <a class="btn btn-primary" href="/admin" style="width:100%;">Зайти в админку</a>
+      <div class="small" style="margin-top:10px;">Админка нужна, чтобы быстро загрузить 100+ товаров и управлять заказами.</div>
+    </div>
+  </div>
+</section>
+
+<section style="padding-bottom:24px;">
+  <h2 style="margin:0 0 12px;">Новинки / Хиты</h2>
+  <div class="grid">
+    <% hits.forEach(p => { 
+      const img = (p.images || "").split("|").map(s => s.trim()).filter(Boolean)[0];
+    %>
+      <div class="prod">
+        <a href="/p/<%= p.slug %>">
+          <div class="thumb">
+            <% if (img) { %><img src="<%= img %>" alt=""><% } else { %>Фото<% } %>
+          </div>
+        </a>
+        <div class="title"><a href="/p/<%= p.slug %>"><%= p.name %></a></div>
+        <div class="meta">
+          <span><%= p.brand || "—" %></span>
+          <span>SKU: <%= p.sku || "—" %></span>
+        </div>
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <div class="price"><%= money(p.price_uah) %></div>
+          <form action="/cart/add" method="post">
+            <input type="hidden" name="product_id" value="<%= p.id %>">
+            <input type="hidden" name="qty" value="1">
+            <button class="btn btn-primary" type="submit">Купить</button>
+          </form>
+        </div>
+      </div>
+    <% }) %>
+  </div>
+</section>
+
+<%- include("../partials/footer") %>

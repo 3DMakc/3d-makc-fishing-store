@@ -1,0 +1,13 @@
+<%- include("../partials/header", { title: "Заказ принят" }) %>
+
+<div class="card" style="margin:18px 0;">
+  <div class="badge">✅ Заказ создан</div>
+  <h1 style="margin:10px 0;">Спасибо! Заказ #<%= orderId %> принят.</h1>
+  <p class="small">Мы свяжемся с вами для подтверждения. Уведомление уже ушло в Telegram (если настроено).</p>
+  <div class="btn-row">
+    <a class="btn btn-primary" href="/catalog">Вернуться в каталог</a>
+    <a class="btn btn-ghost" href="/">На главную</a>
+  </div>
+</div>
+
+<%- include("../partials/footer") %>

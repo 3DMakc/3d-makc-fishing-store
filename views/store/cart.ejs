@@ -1,0 +1,44 @@
+<%- include("../partials/header", { title: "Корзина" }) %>
+
+<div class="card" style="margin:18px 0;">
+  <h2 style="margin:0 0 10px;">Корзина</h2>
+
+  <% if (!cart.items.length) { %>
+    <div class="small">Корзина пустая. <a href="/catalog" style="color:var(--orange); font-weight:800;">Перейти в каталог</a></div>
+  <% } else { %>
+    <form action="/cart/update" method="post">
+      <table class="table">
+        <thead>
+          <tr><th>Товар</th><th>Цена</th><th>Кол-во</th><th>Сумма</th><th></th></tr>
+        </thead>
+        <tbody>
+          <% cart.items.forEach(it => { %>
+            <tr>
+              <td><a href="/p/<%= it.slug %>"><%= it.name %></a></td>
+              <td><%= money(it.price_uah) %></td>
+              <td style="width:140px;">
+                <input name="qty[<%= it.product_id %>]" value="<%= it.qty %>" inputmode="numeric">
+              </td>
+              <td><%= money(it.price_uah * it.qty) %></td>
+              <td style="width:120px;">
+                <form action="/cart/remove" method="post">
+                  <input type="hidden" name="product_id" value="<%= it.product_id %>">
+                  <button class="btn btn-ghost" type="submit" style="padding:10px 12px;">Удалить</button>
+                </form>
+              </td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-top:12px; gap:10px; flex-wrap:wrap;">
+        <div class="price">Итого: <%= money(total) %></div>
+        <div style="display:flex; gap:10px;">
+          <button class="btn btn-ghost" type="submit">Обновить</button>
+          <a class="btn btn-primary" href="/checkout">Оформить заказ</a>
+        </div>
+      </div>
+    </form>
+  <% } %>
+</div>
+
+<%- include("../partials/footer") %>

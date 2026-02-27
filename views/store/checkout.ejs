@@ -1,0 +1,71 @@
+<%- include("../partials/header", { title: "Оформление заказа" }) %>
+
+<div class="card" style="margin:18px 0;">
+  <h2 style="margin:0 0 10px;">Оформление заказа</h2>
+
+  <% if (errors && errors.length) { %>
+    <div class="alert" style="margin-bottom:12px;">
+      <b>Исправь ошибки:</b>
+      <ul style="margin:8px 0 0;">
+        <% errors.forEach(e => { %><li><%= e %></li><% }) %>
+      </ul>
+    </div>
+  <% } %>
+
+  <div class="hero-grid" style="grid-template-columns: 1fr .9fr;">
+    <div>
+      <form method="post" action="/checkout">
+        <div class="form-row">
+          <div>
+            <label>ФИО</label>
+            <input name="full_name" value="<%= form.full_name || "" %>" placeholder="Иван Иванов">
+          </div>
+          <div>
+            <label>Телефон (+380XXXXXXXXX)</label>
+            <input name="phone" value="<%= form.phone || "" %>" placeholder="+380XXXXXXXXX">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div>
+            <label>Область (не обязательно)</label>
+            <input name="region" value="<%= form.region || "" %>" placeholder="Одесская">
+          </div>
+          <div>
+            <label>Город</label>
+            <input name="city" value="<%= form.city || "" %>" placeholder="Одесса">
+          </div>
+        </div>
+
+        <label>Отделение Новой Почты</label>
+        <input name="np_branch" value="<%= form.np_branch || "" %>" placeholder="№12 или адрес отделения">
+
+        <label>Комментарий (не обязательно)</label>
+        <textarea name="comment" placeholder="Когда удобнее получить, доп. пожелания"><%= form.comment || "" %></textarea>
+
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-top:12px; flex-wrap:wrap; gap:10px;">
+          <div class="price">Итого: <%= money(total) %></div>
+          <button class="btn btn-primary" type="submit">Подтвердить заказ</button>
+        </div>
+        <div class="small" style="margin-top:10px;">
+          Нажимая «Подтвердить заказ», вы соглашаетесь с условиями доставки и обработки данных.
+        </div>
+      </form>
+    </div>
+
+    <div class="card" style="padding:14px;">
+      <h3 style="margin:0 0 8px;">Ваш заказ</h3>
+      <% cart.items.forEach(it => { %>
+        <div style="display:flex; justify-content:space-between; gap:10px; margin:8px 0;">
+          <div class="small"><b><%= it.name %></b><br>x<%= it.qty %></div>
+          <div class="small"><%= money(it.price_uah * it.qty) %></div>
+        </div>
+        <div class="line"></div>
+      <% }) %>
+      <div class="price">Итого: <%= money(total) %></div>
+      <div class="small" style="margin-top:10px;">📦 Нова Пошта • 💳 Наложка/Онлайн • 🛡 Proven Tackle</div>
+    </div>
+  </div>
+</div>
+
+<%- include("../partials/footer") %>

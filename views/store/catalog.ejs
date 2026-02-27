@@ -1,0 +1,85 @@
+<%- include("../partials/header", { title: "Каталог" }) %>
+
+<div class="card" style="margin:18px 0;">
+  <h2 style="margin:0 0 10px;">Каталог</h2>
+  <form method="get" action="/catalog">
+    <div class="form-row">
+      <div>
+        <label>Поиск</label>
+        <input name="s" value="<%= filters.s || "" %>" placeholder="Название или SKU">
+      </div>
+      <div>
+        <label>Категория</label>
+        <select name="category">
+          <option value="">Все</option>
+          <% categories.forEach(c => { %>
+            <option value="<%= c.slug %>" <%= (filters.category===c.slug) ? "selected":"" %>><%= c.name %></option>
+          <% }) %>
+        </select>
+      </div>
+      <div>
+        <label>Бренд</label>
+        <select name="brand">
+          <option value="">Все</option>
+          <% brands.forEach(b => { %>
+            <option value="<%= b.brand %>" <%= (filters.brand===b.brand) ? "selected":"" %>><%= b.brand %></option>
+          <% }) %>
+        </select>
+      </div>
+      <div>
+        <label>Сортировка</label>
+        <select name="sort">
+          <option value="">По новизне</option>
+          <option value="price_asc" <%= (filters.sort==="price_asc") ? "selected":"" %>>Цена ↑</option>
+          <option value="price_desc" <%= (filters.sort==="price_desc") ? "selected":"" %>>Цена ↓</option>
+          <option value="name_asc" <%= (filters.sort==="name_asc") ? "selected":"" %>>Название A–Z</option>
+        </select>
+      </div>
+      <div>
+        <label>Цена от</label>
+        <input name="min" value="<%= filters.min || "" %>" inputmode="numeric" placeholder="0">
+      </div>
+      <div>
+        <label>Цена до</label>
+        <input name="max" value="<%= filters.max || "" %>" inputmode="numeric" placeholder="99999">
+      </div>
+    </div>
+    <div style="margin-top:10px; display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
+      <label style="margin:0; display:flex; align-items:center; gap:8px;">
+        <input type="checkbox" name="inStock" value="1" <%= (filters.inStock==="1") ? "checked":"" %> >
+        Только в наличии
+      </label>
+      <button class="btn btn-primary" type="submit">Применить</button>
+      <a class="btn btn-ghost" href="/catalog">Сброс</a>
+    </div>
+  </form>
+</div>
+
+<div class="grid" style="margin-bottom:30px;">
+  <% products.forEach(p => { 
+    const img = (p.images || "").split("|").map(s => s.trim()).filter(Boolean)[0];
+  %>
+    <div class="prod">
+      <a href="/p/<%= p.slug %>">
+        <div class="thumb">
+          <% if (img) { %><img src="<%= img %>" alt=""><% } else { %>Фото<% } %>
+        </div>
+      </a>
+      <div class="title"><a href="/p/<%= p.slug %>"><%= p.name %></a></div>
+      <div class="meta">
+        <span><%= p.category_name || "—" %></span>
+        <span><%= p.stock > 0 ? "В наличии" : "Нет" %></span>
+      </div>
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <div class="price"><%= money(p.price_uah) %></div>
+        <form action="/cart/add" method="post">
+          <input type="hidden" name="product_id" value="<%= p.id %>">
+          <input type="hidden" name="qty" value="1">
+          <button class="btn btn-primary" type="submit">Купить</button>
+        </form>
+      </div>
+    </div>
+  <% }) %>
+</div>
+
+<%- include("../partials/footer") %>

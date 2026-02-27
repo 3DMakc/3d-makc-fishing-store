@@ -1,0 +1,20 @@
+<%- include("../partials/header", { title: "Админка" }) %>
+
+<div class="card" style="margin:18px 0; max-width:520px;">
+  <h2 style="margin:0 0 10px;">Вход в админку</h2>
+  <% if (error) { %>
+    <div class="alert" style="margin-bottom:12px;"><%= error %></div>
+  <% } %>
+  <form method="post" action="/admin/login">
+    <label>Логин</label>
+    <input name="user" placeholder="admin">
+    <label>Пароль</label>
+    <input name="pass" type="password" placeholder="••••••••">
+    <div style="margin-top:12px;">
+      <button class="btn btn-primary" type="submit" style="width:100%;">Войти</button>
+    </div>
+    <div class="small" style="margin-top:10px;">Логин/пароль задаются в файле .env</div>
+  </form>
+</div>
+
+<%- include("../partials/footer") %>

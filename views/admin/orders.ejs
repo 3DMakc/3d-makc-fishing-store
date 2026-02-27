@@ -1,0 +1,30 @@
+<%- include("../partials/header", { title: "Админ • Orders" }) %>
+
+<div class="card" style="margin:18px 0;">
+  <div class="admin-nav">
+    <a href="/admin/dashboard">Dashboard</a>
+    <a href="/admin/products">Products</a>
+    <a href="/admin/orders">Orders</a>
+    <a href="/catalog">Открыть магазин</a>
+  </div>
+
+  <h2 style="margin:0 0 10px;">Orders</h2>
+  <table class="table">
+    <thead><tr><th>ID</th><th>Клиент</th><th>Телефон</th><th>Город</th><th>Сумма</th><th>Статус</th><th>Дата</th></tr></thead>
+    <tbody>
+      <% orders.forEach(o => { %>
+        <tr>
+          <td><a href="/admin/orders/<%= o.id %>">#<%= o.id %></a></td>
+          <td><%= o.full_name %></td>
+          <td><%= o.phone %></td>
+          <td><%= o.city %></td>
+          <td><%= money(o.total_uah) %></td>
+          <td><%= o.status %></td>
+          <td class="small"><%= o.created_at %></td>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
+</div>
+
+<%- include("../partials/footer") %>

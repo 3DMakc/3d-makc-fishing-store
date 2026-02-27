@@ -1,0 +1,60 @@
+<%- include("../partials/header", { title: product.name }) %>
+
+<div class="card" style="margin:18px 0;">
+  <div class="hero-grid" style="grid-template-columns: 1fr 1fr; gap:14px;">
+    <div>
+      <div class="thumb" style="height:360px;">
+        <% if (images[0]) { %>
+          <img src="<%= images[0] %>" alt="">
+        <% } else { %>
+          Фото товара
+        <% } %>
+      </div>
+      <% if (images.length > 1) { %>
+        <div class="kv" style="margin-top:10px;">
+          <% images.slice(1,6).forEach(img => { %>
+            <div class="thumb" style="height:70px; width:70px; border-radius:14px;">
+              <img src="<%= img %>" alt="">
+            </div>
+          <% }) %>
+        </div>
+      <% } %>
+    </div>
+
+    <div>
+      <div class="badge">💪 PROVEN TACKLE • UKRAINE</div>
+      <h1 style="margin:10px 0 8px;"><%= product.name %></h1>
+      <div class="small">Категория: <a href="/c/<%= product.category_slug %>"><%= product.category_name || "—" %></a> • Бренд: <%= product.brand || "—" %> • SKU: <%= product.sku || "—" %></div>
+      <div style="margin-top:14px; display:flex; align-items:center; justify-content:space-between; gap:12px;">
+        <div class="price" style="font-size:28px;"><%= money(product.price_uah) %></div>
+        <div class="small"><%= product.stock > 0 ? "✅ В наличии" : "⛔ Нет в наличии" %></div>
+      </div>
+
+      <form action="/cart/add" method="post" style="margin-top:14px;">
+        <input type="hidden" name="product_id" value="<%= product.id %>">
+        <div class="form-row" style="grid-template-columns: 120px 1fr;">
+          <div>
+            <label>Кол-во</label>
+            <input name="qty" value="1" inputmode="numeric">
+          </div>
+          <div style="display:flex; align-items:end;">
+            <button class="btn btn-primary" type="submit" style="width:100%;" <%= product.stock <= 0 ? "disabled":"" %>>Добавить в корзину</button>
+          </div>
+        </div>
+      </form>
+
+      <div class="line"></div>
+      <div class="kv">
+        <div class="pill">📦 Нова Пошта 1–3 дня</div>
+        <div class="pill">💳 Наложка / Онлайн</div>
+        <div class="pill">🛡 Проверено 3D_MAKC</div>
+      </div>
+
+      <div class="line"></div>
+      <h3 style="margin:0 0 8px;">Описание</h3>
+      <div class="small" style="white-space:pre-wrap; line-height:1.6;"><%= product.description || "Описание скоро будет добавлено." %></div>
+    </div>
+  </div>
+</div>
+
+<%- include("../partials/footer") %>
